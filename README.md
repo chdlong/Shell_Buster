@@ -1,13 +1,10 @@
 # Shell_Buster
 ### python之提速千倍爆破一句话
 
-最初思路源于T00ls版主**`接地气`**，一个低调、热心的安全研究者。向技术研究者和分享者致敬！！！
+最初思路源于T00ls版主`**接地气**`，一个低调、热心的安全研究者。向技术研究者和分享者致敬！！！
 
 
 本来接地气大牛已经写出了C#版本的工具了，那天在群里王子表哥突然那么一问，于是我就写了这篇详细的过程。
-
-
-![Alt text](./1482030401521.png)
 
 
 一般来说，一句话木马脚本的样本如下：
@@ -28,7 +25,7 @@
 如下，我们这里准备了一个PHP版本的一句话木马，密码是`v5est0r`，POST的数据是`v5est0r=echo "password is v5est0r";`，变量提交能匹配上即执行`echo`语句，此为传统的单数据提交模式，
 
 
-![Alt text](./1482032941587.png)
+![Alt text](./pic/1482032941587.png)
 
 
 那么根据接地气大哥的思路，一次提交多个变量数据呢？多个变量用`&`连接符连接起来。无论是提交一个变量还是多个变量，服务器都是判断一次，只要提交内容中存在正确的变量就执行`echo`语句，于是乎，一次提交多个变量就大大增加了破解效率。
@@ -37,7 +34,7 @@
 v5est0r=echo "password is v5est0r";&123=echo "password is 123";&admin=echo "password is admin";&1=echo "password is 1";&pass=echo "password is pass";&test=echo "password is test";
 ```
 
-![Alt text](./1482033066644.png)
+![Alt text](./pic/1482033066644.png)
 
 Apache一次允许同时提交1000个参数，  IIS允许一次提交5883个参数。
 
@@ -46,7 +43,7 @@ Apache一次允许同时提交1000个参数，  IIS允许一次提交5883个参�
 
 下图是我们在python命令行下使用requests库测试提交，很方便：
 
-![Alt text](./1482072518231.png)
+![Alt text](./pic/1482072518231.png)
 
 
 
@@ -79,7 +76,7 @@ password is v5est0r
 >清空字典并尝试向添加新的变量
 
 
-![Alt text](./1482036289760.png)
+![Alt text](./pic/1482036289760.png)
 
 如是，很简单的判断出了一句话木马的变量是`v5est0r`，当前的提交变量对应的数据是：
 
@@ -122,7 +119,7 @@ for each in jj:
 print post_data
 ```
 
-![Alt text](./1482054701826.png)
+![Alt text](./pic/1482054701826.png)
 
 提交的数据是：
 
@@ -210,11 +207,11 @@ for i in range(0,dics):
 
 这里准备了一个字典，有68万+的密码变量，我们把正确的密码放在最后一个：
 
-![Alt text](./1482065296381.png)
+![Alt text](./pic/1482065296381.png)
 
 尝试执行脚本，可以看到，python处理数据极快：
 
-![Alt text](./2016-12-18 20_52_08.gif)
+![Alt text](./pic/2016-12-18 20_52_08.gif)
 
 但是，出现了问题，明明是存在密码的，但是却没爆破出来。后来想了下，是因为密码在最后一位，我们在以千为单位分割时漏掉了余数，于是如下添加以下代码补齐余数：
 
@@ -230,7 +227,7 @@ print "正在进行余数字典爆破"
 print r.text
 ```
 
-![Alt text](./2016-12-18 21_16_14.gif)
+![Alt text](./pic/2016-12-18 21_16_14.gif)
 
 如此，软件基本成型，我们还需加入ASP类型的脚本木马爆破，直接替换提交的数据即可。
 
@@ -357,7 +354,7 @@ python ShellBuster.py shell_url shell_type dic_dir
 python ShellBuster.py http://192.168.1.103/hack.php php pass.txt
 ```
 
-![Alt text](./2016-12-18 22_41_53.gif)
+![Alt text](./pic/2016-12-18 22_41_53.gif)
 
 ASP脚本测试效果，30万字典几秒就跑完了：
 
@@ -365,7 +362,7 @@ ASP脚本测试效果，30万字典几秒就跑完了：
 python ShellBuster.py http://192.168.1.103:8080/hack.asp asp pass.txt
 ```
 
-![Alt text](./2016-12-18 22_40_33.gif)
+![Alt text](./pic/2016-12-18 22_40_33.gif)
 
 aspx脚本与asp同理，直接沿用asp的模块：
 
